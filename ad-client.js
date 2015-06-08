@@ -24,9 +24,11 @@
 
 require("console-stamp")(console, "HH:MM:ss.l");
 
-var ldap = require('ldapjs');
-var events = require('events');
+var _ = require('underscore');
 var util = require('util');
+var events = require('events');
+var wait = require('wait.for');
+var ldap = require('ldapjs');
 
 //
 // Host validation regex based on:
@@ -140,18 +142,6 @@ function escapeADString(str) {
   return es;
 }
 
-var baseUserQuery = '(&(objectCategory=user)(objectClass=user)(|(distinguishedName=%s)(userPrincipalName=%s)(samAccountName=%s)))';
-var baseGroupsForDNQuery = '(&(objectCategory=group)(objectClass=group)(member:1.2.840.113556.1.4.1941:=%s))';
-
-function getUserQuery(username) {
-  var escapedUsername = escapeADString(username);
-  return util.format(baseUserQuery, escapedUsername, escapedUsername, escapedUsername);
-}
-
-function getGroupsForDNQuery(distinguishedName) {
-  return util.format(baseGroupsForDNQuery, distinguishedName);
-}
-
 function notSuppliedError(param) {
   return new Error(util.format('%s not supplied.', param));
 }
@@ -255,9 +245,10 @@ ADClient.prototype.authenticate = function (username, password, callback) {
   });
 };
 
-function execQuery(query, client, configuration, callback) {
+function execQuery(query, client, clientOptions, configuration, callback) {
   console.log('Executing ' + query);
-  client.search(configuration.baseDN, { scope: 'sub', filter: query }, function(err, res) {
+  client.search(configuration.baseDN, _({ scope: 'sub', filter: query })
+    .extend(clientOptions || {}), function(err, res) {
     if (err) {
       callback(err, null);
       return;
@@ -288,43 +279,99 @@ function execQuery(query, client, configuration, callback) {
   });
 }
 
-function getUser(username, client, configuration, callback) {
-  execQuery(getUserQuery(username), client, configuration, function(err, users) {
-    if (err) {
-      callback(err, null);
-      return;
+function validateQueryResults(err, results, rootCallback, success, empty) {
+  if (err) {
+    rootCallback(err, null);
+  }
+  
+  if (!results || !results.length || !results[0] || !results[0].dn) {
+    if (empty) {
+      empty(null, null);
+    } else {
+      rootCallback(null, null);
     }
-    
-    if (!users || !users.length || !users[0] || !users[0].dn) {
+    return;
+  }
+  
+  success(null, results);
+}
+
+function validateNetBIOSDomainName(netBIOSDomainName, client, configuration, callback) {
+  execQuery(util.format('(distinguishedName=%s)', configuration.baseDN), client, { attributes: [ 'msDS-PrincipalName' ] }, configuration, function(err, domains) {
+    var inName = netBIOSDomainName.toUpperCase();
+    if (inName.charAt(inName.length - 1) === '\\') {
+      inName = inName.substring(0, inName.length - 1);
+    }
+    var fdName = domains[0].attributes[0].vals[0].toUpperCase();
+    if (fdName.charAt(fdName.length - 1) === '\\') {
+      fdName = fdName.substring(0, fdName.length - 1);
+    }
+    if (inName === fdName) {
+      callback(null, configuration.baseDN);
+    } else {
+      callback(null, null);
+    }
+  });
+}
+
+var baseUserQueryByDN = '(&(objectCategory=user)(objectClass=user)(distinguishedName=%s))';
+var baseUserQueryByUPN = '(&(objectCategory=user)(objectClass=user)(userPrincipalName=%s))';
+var baseUserQueryBySAN = '(&(objectCategory=user)(objectClass=user)(samAccountName=%s))';
+var baseGroupsForDNQuery = '(&(objectClass=top)(objectClass=group)(member:1.2.840.113556.1.4.1941:=%s))';
+
+function getGroupsForDNQuery(distinguishedName) {
+  return util.format(baseGroupsForDNQuery, distinguishedName);
+}
+
+function getUserQuery(username, client, configuration) {
+  if (~username.indexOf('\\')) {
+    var splitUsername = username.split('\\');
+    var netBIOSDomainName = splitUsername[0];
+    var sAMAccountName = splitUsername[1];
+    var domainDN = null;
+    try {
+      domainDN = wait.for(validateNetBIOSDomainName, netBIOSDomainName, client, configuration);
+    } catch (err) {
+    }
+    if (domainDN) {
+      return util.format(baseUserQueryBySAN, escapeADString(sAMAccountName));
+    } else {
+      return null;
+    }
+  } else if (~username.indexOf('@')) {
+    return util.format(baseUserQueryByUPN, escapeADString(username));
+  } else {
+    return util.format(baseUserQueryBySAN, escapeADString(username));
+  }
+}
+
+function getUser(username, client, configuration, callback) {
+  wait.launchFiber(function() {
+    var userQuery = getUserQuery(username, client, configuration);
+    if (!userQuery) {
       callback(null, null);
       return;
     }
-    
-    var user = users[0];
-    getGroupsForDN(user.dn, client, configuration, function(err, groups) {
-      if (err) {
-        callback(err, null);
-        return;
-      }
-      
-      user.groups = groups;
-      callback(null, user);
+    execQuery(userQuery, client, null, configuration, function(err, users) {
+      validateQueryResults(err, users, callback, function() {
+        var user = users[0];
+        getGroupsForDN(user.dn, client, configuration, function(err, groups) {
+          if (err) {
+            callback(err, null);
+            return;
+          }
+          
+          user.groups = groups;
+          callback(null, user);
+        });
+      });
     });
   });
 }
 
 function getGroupsForDN(distinguishedName, client, configuration, callback) {
-  execQuery(getGroupsForDNQuery(distinguishedName), client, configuration, function(err, groups) {
-    if (err) {
-      callback(err, null);
-      return;
-    }
-    
-    if (!groups || !groups.length || !groups[0] || !groups[0].dn) {
-      callback(null, null);
-    }
-    
-    callback(null, groups);
+  execQuery(getGroupsForDNQuery(distinguishedName), client, null, configuration, function(err, groups) {
+    validateQueryResults(err, groups, callback, function() { callback(null, groups); });
   });
 }
 
