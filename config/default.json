@@ -1,5 +1,5 @@
 {
-	"activeDirectory": {
-  		"includeMembership": [ "user" ]
-	}
+  "activeDirectory": {
+      "includeMembership": [ "user" ]
+  }
 }

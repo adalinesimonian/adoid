@@ -1,13 +1,13 @@
 {
-	"activeDirectory": {
-		"url": "ldap://dc.example.com",
-		"baseDN": "dc=example,dc=com",
-		"username": "adoid",
-		"password": "terriblepassword123"
-	},
-	"redis": {
-		"host": "127.0.0.1",
-		"port": 6379
-	},
-	"secret": "changeme"
+  "activeDirectory": {
+    "url": "ldap://dc.example.com",
+    "baseDN": "dc=example,dc=com",
+    "username": "adoid",
+    "password": "terriblepassword123"
+  },
+  "redis": {
+    "host": "127.0.0.1",
+    "port": 6379
+  },
+  "secret": "changeme"
 }
