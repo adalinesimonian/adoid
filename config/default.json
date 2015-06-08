@@ -1,0 +1,5 @@
+{
+	"activeDirectory": {
+  		"includeMembership": [ "user" ]
+	}
+}

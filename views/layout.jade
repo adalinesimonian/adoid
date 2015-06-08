@@ -1,0 +1,19 @@
+doctype html
+html
+  head
+    if locals.title
+      title= title
+    else
+      title ADOID
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src='/javascripts/main.js')
+  |   
+  body(unresolved)
+    header
+      if locals.title
+        h1= title
+      else
+        h1 ADOID
+    section
+      main
+        block content

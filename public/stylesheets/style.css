@@ -1,0 +1,396 @@
+body {
+  padding: 0;
+  margin: 0;
+  background: #89A8CE;
+  color: #212121;
+  font: normal normal 400 16px "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+}
+
+div, header, main, section, input, button, pre, span, h1, h2, h3, h4, h5, h6, ul, li, article {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+pre {
+  overflow: auto;
+  word-wrap: normal;
+  white-space: pre;
+  max-height: 600px
+}
+
+.auth-icon {
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+
+body > header, button, button.affirmative, input[type="button"].affirmative,
+input[type="submit"].affirmative, input[type="button"]:focus,
+input[type="button"]:hover, input[type="submit"]:focus,
+input[type="submit"]:hover {
+  /**
+   * Shadow CSS taken from
+   * https://github.com/PolymerElements/paper-styles/blob/master/shadow.html
+   * Subject to BSD 3-Clause license (see http://polymer.github.io/LICENSE.txt)
+   */
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+              0 1px 5px 0 rgba(0, 0, 0, 0.12),
+              0 3px 1px -2px rgba(0, 0, 0, 0.2);
+}
+
+button, input[type="button"], input[type="submit"] {
+  min-width: 96px;
+  margin: 4px;
+  border-radius: 2px;
+  padding: 14px;
+  background: #FAFAFA;
+  color: #3D6698;
+  font: normal normal 500 16px "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+  cursor: pointer;
+  outline: none;
+  border: none;
+}
+
+button:focus, input[type="button"]:focus, input[type="submit"]:focus {
+}
+
+button:hover, button:active, input[type="button"]:hover, input[type="button"]:active, input[type="submit"]:hover, input[type="submit"]:active {
+}
+
+button:active, input[type="button"]:active, input[type="submit"]:active {
+  /**
+   * Shadow CSS taken from
+   * https://github.com/PolymerElements/paper-styles/blob/master/shadow.html
+   * Subject to BSD 3-Clause license (see http://polymer.github.io/LICENSE.txt)
+   */
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.14),
+              0 0 4px 0 rgba(0, 0, 0, 0.12),
+              0 2px 0 -2px rgba(0, 0, 0, 0.2);
+  transform: translateY(2px);
+}
+
+button.dismissive, input[type="button"].dismissive, input[type="submit"].dismissive {
+  color: #616161;
+}
+
+button.affirmative, input[type="button"].affirmative, input[type="submit"].affirmative {
+  background: #0E724F;
+  color: #FFF;
+}
+
+button.affirmative:focus, input[type="button"].affirmative:focus, input[type="submit"].affirmative:focus {
+  background: #1E8E66;
+}
+
+button.affirmative:hover, button.affirmative:active, input[type="button"].affirmative:hover, input[type="button"].affirmative:active, input[type="submit"].affirmative:hover, input[type="submit"].affirmative:active {
+  background: #55B291;
+}
+
+input:not([type]), input[type="text"], input[type="password"], input[type="email"] {
+  font: normal normal 400 16px "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  background: transparent;
+  color: #212121;
+  width: 100%;
+  margin: 8px 0;
+  line-height: 36px;
+  height: 38px;
+  outline: none;
+}
+
+input:not([type]).error, input[type="text"].error, input[type="password"].error, input[type="email"].error {
+  border-bottom: 2px solid #D32F2F;
+}
+
+input:not([type]):focus, input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus {
+  border-bottom: 2px solid #3D6698;
+}
+
+body > header {
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #3D6698;
+  color: #fff;
+  height: 224px;
+  width: 100%;
+}
+
+body > section {
+  z-index: 2;
+  position: absolute;
+  overflow: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  padding: 100px 0 0 0;
+}
+
+main {
+  z-index: 2;
+  border-radius: 2px;
+  position: relative;
+  margin: auto;
+  min-height: 100%;
+  height: auto;
+  width: 60%;
+  padding: 24px;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fafafa;
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14),
+            0 1px 8px 0 rgba(0, 0, 0, 0.12),
+            0 3px 3px -2px rgba(0, 0, 0, 0.4);
+}
+
+body:not([unresolved]) main {
+  transition: width ease-in-out .5s;
+}
+
+main > section {
+  -webkit-flex: 1 0 auto;
+  flex: 1 0 auto;
+}
+
+@media(max-width: 1000px) {
+  main {
+    width: 80%;
+  }
+}
+
+@media(max-width: 640px) {
+  main {
+    width: 100%;
+  }
+}
+
+main > h1:first-child, main > h2:first-child,
+main > h3:first-child, main > p:first-child,
+main > div:first-child {
+  padding-top: 0;
+  margin-top: 0;
+}
+
+h1, h2, h3 {
+  padding: 0;
+  font-weight: 300;
+}
+
+h1, h2 {
+  margin: 16px 0;
+}
+
+h1 {
+  font-size: 32px;
+}
+
+h2 {
+  font-size: 24px;
+}
+
+header > h1 {
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  
+  transform: translateX(30%);
+}
+
+body:not([unresolved]) header > h1 {
+  transition: transform ease-in-out .5s;
+}
+
+@media(max-width: 1000px) {
+  header > h1 {
+    transform: translateX(20%);
+  }
+}
+
+@media(max-width: 640px) {
+  header > h1 {
+    transform: translateX(10%);
+  }
+}
+
+main > section {
+  margin-bottom: 24px;
+}
+
+.signin {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-align-content: space-around;
+  align-content: space-around;
+  -webkit-justify-content: space-around;
+  justify-content: space-around;
+}
+
+.auth-details {
+  display: block;
+  width: 60%;
+}
+
+.request-details {
+  width: 100%;
+  display: block;
+  margin-bottom: 24px;
+}
+
+.request-details h2 {
+  width: 100%;
+  margin: 0;
+  height: 100px;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  text-align: left;
+}
+
+.signin-form {
+  width: 90%;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-content: center;
+  align-content: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-flex: 1 auto;
+  flex: 0 1 auto;
+}
+
+.signin-submit {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-content: flex-end;
+  align-content: flex-end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+@media(max-width: 1024px) {
+  .signin {
+    display: block;
+    width: 100%;
+  }
+  .signin-form {
+    padding: 0;
+  }
+  .signin .auth-icon {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+  }
+  .auth-details {
+    display: inline-block;
+  }
+  .request-details {
+    padding-left: 116px;
+  }
+  .request-details, .auth-details, .signin-form, .signin-control, .signin-submit {
+    width: 100%;
+  }
+}
+
+@media(max-width: 640px) {
+  .request-details {
+    padding-left: 0;
+  }
+  .request-details h2 {
+    position: absolute;
+    padding-left: 116px;
+    margin: 0;
+    height: 100px;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+  }
+  .request-details .permissions {
+    padding-top: 100px;
+  }
+}
+
+ul.permissions {
+  list-style: none outside none;
+}
+
+ul.permissions ul {
+  list-style: disc inside none;
+}
+
+ul.permissions, ul.permissions ul {
+  padding: 0;
+  margin: 0;
+}
+
+ul.permissions li {
+  padding: 8px 32px 0 5%;
+  margin-left: 32px;
+  text-indent: -32px;
+}
+
+ul.permissions li li {
+  margin-left: 16px;
+  text-indent: -16px;
+}
+
+ul.permissions > li {
+  padding-left: 2.5%;
+}
+
+ul.permissions ul {
+  padding-top: 8px;
+}
+
+ul.permissions ul li:last-child {
+  padding-bottom: 0;
+}
+
+ul.permissions li::before {
+  text-indent: 0;
+  display: inline-block;
+  position: relative;
+  top: 6px;
+  height: 100%;
+  width: 32px;
+}
+
+ul.permissions .identity::before {
+  content: url('data:image/svg+xml,%3Csvg%20fill%3D%22#616161%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M12%205.9c1.16%200%202.1.94%202.1%202.1s-.94%202.1-2.1%202.1S9.9%209.16%209.9%208s.94-2.1%202.1-2.1m0%209c2.97%200%206.1%201.46%206.1%202.1v1.1H5.9V17c0-.64%203.13-2.1%206.1-2.1M12%204C9.79%204%208%205.79%208%208s1.79%204%204%204%204-1.79%204-4-1.79-4-4-4zm0%209c-2.67%200-8%201.34-8%204v3h16v-3c0-2.66-5.33-4-8-4z%22%2F%3E%3Cpath%20d%3D%22M0%200h24v24H0z%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E');
+}
+
+ul.permissions .email::before {
+  content: url('data:image/svg+xml,%3Csvg%20fill%3D%22%23616161%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M20%204H4c-1.1%200-1.99.9-1.99%202L2%2018c0%201.1.9%202%202%202h16c1.1%200%202-.9%202-2V6c0-1.1-.9-2-2-2zm0%204l-8%205-8-5V6l8%205%208-5v2z%22%2F%3E%3Cpath%20d%3D%22M0%200h24v24H0z%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E');
+}
+
+ul.permissions .apps::before {
+  content: url('data:image/svg+xml,%3Csvg%20fill%3D%22%23616161%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M4%208h4V4H4v4zm6%2012h4v-4h-4v4zm-6%200h4v-4H4v4zm0-6h4v-4H4v4zm6%200h4v-4h-4v4zm6-10v4h4V4h-4zm-6%204h4V4h-4v4zm6%206h4v-4h-4v4zm0%206h4v-4h-4v4z%22%2F%3E%3Cpath%20d%3D%22M0%200h24v24H0z%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E');
+}
+
+a {
+  color: #00B7FF;
+}
