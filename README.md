@@ -5,4 +5,4 @@ yet. Hopefully, it will be soon...
 
 ### What is ADOID?
 
-ADOID is an Active Dircetory OpenID Connect provider that runs on [express](http://expressjs.com/).
+ADOID is an Active Directory OpenID Connect provider that runs on [express](http://expressjs.com/).

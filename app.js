@@ -2,8 +2,8 @@ require("console-stamp")(console, "HH:MM:ss.l");
 var config = require('config');
 
 var adConfig = config.get('activeDirectory');
-var ActiveDirectory = require('activedirectory');
-var ad = new ActiveDirectory(adConfig);
+var ADClient = require('./ad-client.js');
+var ad = new ADClient(adConfig);
 
 var express = require('express');
 var expressSession = require('express-session');
@@ -54,28 +54,15 @@ var validateUser = function (req, next) {
   console.log('Attempting to authenticate ' + req.body.username);
   delete req.session.error;
   
-  ad.authenticate(req.body.username, req.body.password, function(err, auth) {
+  ad.authenticate(req.body.username, req.body.password, function(err, user) {
     if (err) {
       console.error(JSON.stringify(err));
       return next(new Error(JSON.stringify(err)));
     }
     
-    if (auth) {
-      console.info('Authenticated ' + req.body.username, auth);
-      ad.findUser(req.body.username, function(err, user) {
-        if (err) {
-          console.error(JSON.stringify(err));
-          return next(new Error(JSON.stringify(err)));
-        }
-       
-        if (!user) {
-          console.error('Unable to fetch user object for ' + req.body.username);
-          return next(new Error('Unable to fetch user object for ' + req.body.username));
-        } else {
-          console.info('Retrieved ' + req.body.username, user);
-          return next(null, user);
-        }
-      });
+    if (user) {
+      console.log('Authenticated ' + req.body.username, user);
+      return next(null, user);
     }
     else {
       return next(new Error('Username or password incorrect.'));
@@ -84,12 +71,10 @@ var validateUser = function (req, next) {
 };
 
 var afterLogin = function (req, res, next) {
-  /*jshint unused:false */
   res.redirect(req.param('return_url')||'/user');
 };
 
 var loginError = function (err, req, res, next) {
-  /*jshint unused:false */
   req.session.error = err.message;
   res.redirect(req.path);
 };

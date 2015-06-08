@@ -1,6 +1,6 @@
 {
   "activeDirectory": {
-    "url": "ldap://dc.example.com",
+    "host": "dc.example.com",
     "baseDN": "dc=example,dc=com",
     "username": "adoid",
     "password": "terriblepassword123"

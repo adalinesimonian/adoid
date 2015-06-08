@@ -1,5 +1,10 @@
-{
-  "activeDirectory": {
-      "includeMembership": [ "user" ]
-  }
-}
+/**
+ * DO NOT MODIFY THIS FILE YOURSELF!
+ * 
+ * It will be overwritten by any new installation of ADOID.
+ * 
+ * Instead, add your settings into a new configuration file named
+ * local.json. See local.json.example for a starting point.
+ *
+ */
+{}

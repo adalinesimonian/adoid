@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 
+require("console-stamp")(console, "HH:MM:ss.l");
 var app = require('../app');
 var debug = require('debug')('adoid:server');
 var http = require('http');
