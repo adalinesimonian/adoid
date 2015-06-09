@@ -18,11 +18,12 @@
     "express-session": "^1.11.2",
     "connect-redis": "^2.3.0",
     "ldapjs": "^0.7.1",
+    "long": "^2.2.3",
     "events": "^1.0.2",
     "util": "^0.10.3",
     "underscore": "^1.8.3",
     "wait.for": "^0.6.6",
-    "openid-connect": "https://github.com/vsimonian/OpenIDConnect.git",
+    "openid-connect": "vsimonian/OpenIDConnect",
     "console-stamp": "^0.1.6"
   }
 }

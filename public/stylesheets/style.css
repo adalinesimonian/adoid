@@ -320,7 +320,6 @@ main > section {
     padding-left: 0;
   }
   .request-details h2 {
-    position: absolute;
     padding-left: 116px;
     margin: 0;
     height: 100px;
@@ -328,9 +327,6 @@ main > section {
     display: flex;
     -webkit-align-items: center;
     align-items: center;
-  }
-  .request-details .permissions {
-    padding-top: 100px;
   }
 }
 

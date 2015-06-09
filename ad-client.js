@@ -24,6 +24,7 @@
 
 require("console-stamp")(console, "HH:MM:ss.l");
 
+var Long = require("long");
 var _ = require('underscore');
 var util = require('util');
 var events = require('events');
@@ -117,6 +118,26 @@ var reHost = new RegExp(
     ")" +
   "$", "i"
 );
+
+function binarySIDToString(binarySID) {
+  var sid = 'S-' + binarySID[0].toString();
+  var subAuthCount = binarySID[1] & 0xFF;
+  var authority;
+  for (var i = 2; i <= 7; i++) {
+    authority |= binarySID[i] << (8 * (5 - (i - 2)));
+  }
+  sid += '-' + authority.toString(16);
+  var offset = 8, size = 4, subAuth;
+  for (i = 0; i < subAuthCount; i++) {
+    subAuth = Long.fromNumber(0);
+    for (var j = 0; j < size; j++) {
+      subAuth = subAuth.or(Long.fromNumber(binarySID[offset + j] & 0xFF).shiftLeft(8 * j));
+    }
+    sid += '-' + subAuth.toString();
+    offset += size;
+  }
+  return sid;  
+}
 
 var adUnsafeChars = /[^ a-zA-Z0-9.&\-_[\]`~|@$%^?:{}!']/g;
 var adSpecialChars = { ',': 1, '\\': 1, '#': 1, '+': 1, '<': 1, '>': 1, ';': 1, '"': 1, '=': 1 };
@@ -361,8 +382,30 @@ function getUser(username, client, configuration, callback) {
             return;
           }
           
-          user.groups = groups;
-          callback(null, user);
+          user.groups = groups || [];
+          
+          var primaryGroupID;
+          
+          if (primaryGroupID = _.find(user.attributes, function(attr) { return attr.type === 'primaryGroupID'; })) {
+            var userSID = _.find(user.attributes, function(attr) { return attr.type === 'objectSid'; });
+            userSID = binarySIDToString(userSID._vals[0]);
+            var groupSID = userSID.substring(0, userSID.lastIndexOf('-') + 1) + primaryGroupID.vals[0];
+            
+            getObjectBySID(groupSID, client, configuration, function(err, primaryGroup) {
+              if (err) {
+                callback(err, null);
+                return;
+              }
+              
+              if (primaryGroup) {
+                user.groups.unshift(primaryGroup);
+              }
+              
+              callback(null, user);
+            });       
+          } else {
+            callback(null, user);
+          }
         });
       });
     });
@@ -372,6 +415,15 @@ function getUser(username, client, configuration, callback) {
 function getGroupsForDN(distinguishedName, client, configuration, callback) {
   execQuery(getGroupsForDNQuery(distinguishedName), client, null, configuration, function(err, groups) {
     validateQueryResults(err, groups, callback, function() { callback(null, groups); });
+  });
+}
+
+function getObjectBySID(sid, client, configuration, callback) {
+  if (typeof sid !== 'string' && Array.isArray(sid)) {
+    sid = binarySIDToString(sid);
+  }
+  execQuery(util.format('(objectSid=%s)', sid), client, null, configuration, function (err, objects) {
+    validateQueryResults(err, objects, callback, function() { callback(null, objects[0]); });
   });
 }
 

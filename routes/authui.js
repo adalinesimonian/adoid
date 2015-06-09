@@ -43,7 +43,7 @@ var validateUser = function (req, next) {
 };
 
 var afterLogin = function (req, res, next) {
-  res.redirect(req.params.return_url||'/user');
+  res.redirect(req.body.return_url||req.query.return_url||req.params.return_url||'/');
 };
 
 var loginError = function (err, req, res, next) {
@@ -51,21 +51,33 @@ var loginError = function (err, req, res, next) {
   res.redirect(req.path);
 };
 
-router.get('/', function(req, res, next) {
+router.route('/')
+.all(function(req, res, next) {
   res.render('index', { title: 'ADOID' });
 });
 
-router.get('/signin', function(req, res, next) {
+router.route('/signin')
+.get(function(req, res, next) {
   res.render('signin', { title: 'ADOID' });
-});
+})
+.post(oidc.login(validateUser), afterLogin, loginError);
 
-router.get('/authorization', oidc.auth());
-//router.get('/signin', oidc.auth());
-router.post('/signin', oidc.login(validateUser), afterLogin, loginError);
-router.get('/signout', oidc.removetokens(), function(req, res, next) { next(); });
-router.post('/consent', oidc.consent());
-router.get('/token', oidc.token());
-//router.get('/api/user', oidc.check('openid', /profile|email/), function(req, res, next) { next(); });
-router.get('/api/user', oidc.userInfo());
+router.route('/consent')
+.get(function(req, res, next) {
+  res.render('consent', { title: 'ADOID' });
+})
+.post(oidc.consent());
+
+router.route('/signout')
+.all(oidc.removetokens(), function(req, res, next) { next(); });
+
+router.route('/authorization')
+.get(oidc.auth());
+
+router.route('/token')
+.get(oidc.token());
+
+router.route('/api/user')
+.get(oidc.userInfo());
 
 module.exports = router;

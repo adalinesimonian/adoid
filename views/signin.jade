@@ -9,21 +9,12 @@ block content
           path(d='M0 0h24v24H0z', fill='none')
         section.auth-details
           section.request-details
-            h2 [App] is requesting permission to:
-            ul.permissions
-              li.identity
-                | Read your identity
-                ul
-                  li.identity-name Your name
-                  li.identity-email Your e-mail address
-                  li.identity-role Your role in the organization
-              li.apps Read the list of applications you use
-              li.email Read your e-mails
+            h2 Please sign in.
           form.signin-form(method='post')
             .signin-control
               input(name='username', type='text', placeholder='username@domain')
             .signin-control
-              input.error(name='password', type='password', placeholder='password')
+              input(name='password', type='password', placeholder='password')
             .signin-submit
-              input.dismissive(type='submit', value='Deny')
-              input.affirmative(type='submit', value='Authorize')
+              input.dismissive(type='submit', value='Cancel')
+              input.affirmative(type='submit', value='Sign in')
