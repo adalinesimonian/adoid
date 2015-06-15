@@ -16,12 +16,9 @@ var options = {
     openid: 'Know who you are',
     profile: 'View your name, e-mail address, phone number, and role in your organization'
   },
-  //when this line is enabled, user email appears in tokens sub field. By default, id is used as sub.
-  //models:{user:{attributes:{sub:function() {return this.email;}}}},
   models: { client: { attributes: { user: undefined } },
             user: { attributes: { id: { type: 'string', required: true, unique: true, primaryKey: true },
-                                  roles: { type: 'array' } } },
-            consent: { attributes: { date: { type: 'date', required: true } } } },
+                                  roles: { type: 'array' } } } },
   app: router
 };
 var oidc = require('openid-connect').oidc(options);
