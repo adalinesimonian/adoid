@@ -1,0 +1,65 @@
+extends layout
+
+block head
+  include includes/polymer
+  link(rel='import', href='/components/plastik-collapsible/plastik-collapsible.html')
+  script.
+    document.addEventListener('resize', function () {
+      var collapsible = document.querySelector('plastik-collapsible');
+      if (collapsible) {
+        collapsible.updateCollapseStyles();
+      }
+    });
+block content
+  nav
+    if isAdmin
+      a(href='/clients') Manage clients
+    div.spacer
+    if user.name
+      div.identity= user.name.split(' ')[0]
+    a(href='/signout') Sign out
+  if consents && consents.length
+    template(is='dom-bind')
+      plastik-collapsible.table
+        each consent in consents
+          .collapsible-item.row
+            .item-header.row-content
+              .cell
+                img(src='/images/app.svg')
+              .cell.flex.stack= consent.client.name
+                span= ~consent.scopes.indexOf('profile') ? 'Extended access to your account' : 'Basic access to your account'
+              .cell.action
+                a(href='/', on-click='revoke', client-id=consent.client.id) Revoke
+            .item-content= consent.client.name + ' has access to:'
+              ul.permissions
+                each scope in consent.scopes
+                  li(class=scope)= scopes[scope]
+              //-ul.permissions
+              //-  li.identity
+              //-    | Know who you are
+              //-    ul
+              //-      li.identity-name View your name
+              //-      li.identity-email View your e-mail address
+              //-      li.identity-role View what roles you belong to
+              //-  li.apps See the list of apps you've given access to
+              //-  li.email View your e-mail messages
+              .small-header= 'Authorized on ' + consent.date
+    script.
+      var template = document.querySelector('template[is="dom-bind"]');
+      template.revoke = function(e) {
+        if (e) {
+          e.preventDefault();
+        }
+        var form = document.createElement('form');
+        form.setAttribute('method', 'post');
+        var hiddenInput = document.createElement('input');
+        hiddenInput.setAttribute('type', 'hidden');
+        hiddenInput.setAttribute('name', 'revoke');
+        hiddenInput.setAttribute('value', e.target.getAttribute('client-id'));
+        form.appendChild(hiddenInput);
+        form.submit();
+        return false;
+      }
+  else
+    section
+      | You haven't authorized any apps or sites to access your information.

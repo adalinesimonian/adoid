@@ -9,17 +9,25 @@ block content
           path(d='M0 0h24v24H0z', fill='none')
         section.auth-details
           section.request-details
-            h2 [App] would like to:
-            ul.permissions
-              li.identity
-                | Know who you are
-                ul
-                  li.identity-name View your name
-                  li.identity-email View your e-mail address
-                  li.identity-role View what roles you belong to
-              li.apps See the list of apps you've given access to
-              li.email View your e-mail messages
-          form.signin-form(method='post')
+            if scopes.length == 1 && scopes[0].name == 'openid'
+              h2= client.name + ' would like to confirm your identity.'
+            else
+              h2= client.name + ' would like to:'
+              ul.permissions
+                each scope in scopes
+                  li(class=scope.name)= scope.explanation
+                //-li.identity
+                //-  | Know who you are
+                //-  ul
+                //-    li.identity-name View your name
+                //-    li.identity-email View your e-mail address
+                //-    li.identity-role View what roles you belong to
+                //-li.apps See the list of apps you've given access to
+                //-li.email View your e-mail messages
+          div.signin-form
             .signin-submit
-              input.dismissive(type='submit', value='Deny')
-              input.affirmative(type='submit', name='accept', value='Authorize')
+              form(method='post')
+                input(type='hidden', name='cancel', value='Cancel')
+                input.dismissive(type='submit', value='Deny')
+              form(method='post')
+                input.affirmative(type='submit', name='accept', value='Authorize')

@@ -1,0 +1,43 @@
+extends ../layout
+
+block head
+  include ../includes/polymer
+  link(rel='import', href='/components/plastik-collapsible/plastik-collapsible.html')
+  script.
+    window.addEventListener('resize', function () {
+      var collapsible = document.querySelector('plastik-collapsible');
+      if (collapsible) {
+        collapsible.updateCollapseStyles();
+      }
+    });
+block content
+  nav
+    a(href='/') Home
+    a(href='/clients/register') Register client
+    div.spacer
+    if user.name
+      div.identity= user.name.split(' ')[0]
+    a(href='/signout') Sign out
+  if clients && clients.length
+    plastik-collapsible.table
+      each client in clients
+        .collapsible-item.row
+          .item-header.row-content
+            .cell
+              img(src='/images/app.svg')
+            .cell.flex.stack= client.name
+              span= client.id
+            .cell.action
+              a(href='/clients/' + client.id)
+                | Manage
+          .item-content
+            .small-header Key
+            p= client.key
+            .small-header Secret
+            p= client.secret
+            .small-header Redirect URIs
+            each uri in client.redirect_uris
+              p= uri
+  else
+    section
+      | No registered clients.

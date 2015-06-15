@@ -1,0 +1,13 @@
+{
+  "name": "adoid",
+  "private": true,
+  "dependencies": {
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0",
+    "polymer": "Polymer/polymer#^1.0.0",
+    "iron-input": "PolymerElements/iron-input#^1.0.0",
+    "iron-selector": "PolymerElements/iron-selector#^1.0.0",
+    "plastik-collapsible": "Plastikit/plastik-collapsible#^0.0.2",
+    "plastik-regex-validator": "Plastikit/plastik-regex-validator#^0.0.2",
+    "plastik-url-validator": "Plastikit/plastik-url-validator#^0.0.1"
+  }
+}

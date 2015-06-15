@@ -11,6 +11,10 @@ block content
           section.request-details
             h2 Please sign in.
           form.signin-form(method='post')
+            if badCredentials
+              .error Wrong username or password.
+            if error
+              .error= error.message
             .signin-control
               input(name='username', type='text', placeholder='username@domain')
             .signin-control

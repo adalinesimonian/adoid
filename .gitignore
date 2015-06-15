@@ -29,6 +29,7 @@ dump.rdb
 # https://docs.npmjs.com/misc/faq#should-i-check-my-node-modules-folder-into-git
 node_modules
 bower_components
+public/components
 
 # Local configuration
 config/*
@@ -37,3 +38,11 @@ config/*
 
 # IDE settings
 .settings
+
+# SSL certificates/keys/requests/serials
+*.key
+*.cer
+*.crt
+*.pem
+*.req
+serial

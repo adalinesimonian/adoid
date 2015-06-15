@@ -1,13 +1,30 @@
 {
   "activeDirectory": {
+    // The domain controller's hostname/IP address
     "host": "dc.example.com",
+    // The domain's root distinguished name
     "baseDN": "dc=example,dc=com",
+    // Credentials for a user with permissions to enumerate other users' attributes
     "username": "adoid",
     "password": "terriblepassword123"
   },
+  // Redis database connection settings
   "redis": {
     "host": "127.0.0.1",
     "port": 6379
   },
-  "secret": "changeme"
+  // Secret value for sessions - CHANGE THIS!
+  "secret": "changeme",
+  // SIDs of groups that are allowed to add/remove/edit client information
+  // By default this is [ "S-1-5-32-544" ], the built-in Administrators group
+  // "clientManagerGroups": [ "S-1-5-32-544" ],
+  // SSL Options
+  "ssl": {
+    // Path to private key
+    "key": "./adoid.key",
+    // Path to SSL certificate
+    "cert": "./adoid.crt",
+    // Path to CA certificate
+    "ca": "./ca.crt"
+  }
 }

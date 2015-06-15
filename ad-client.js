@@ -279,6 +279,14 @@ function execQuery(query, client, clientOptions, configuration, callback) {
   
     res.on('searchEntry', function(entry) {
       delete entry.controls;
+      entry.getAttribute = getAttribute;
+      if (entry.attributes && entry.attributes.length) {
+        _.each(entry.attributes, function (attr) {
+          entry.attributes[attr.type] = attr;
+          attr.type && (entry.attributes[attr.type.toUpperCase()] = attr);
+          attr.getValue = getValue;
+        });
+      }
       results.push(entry);
     });
     
@@ -383,11 +391,13 @@ function getUser(username, client, configuration, callback) {
           }
           
           user.groups = groups || [];
+          user.getGroup = getGroup;
+          user.hasGroups = hasGroups;
           
           var primaryGroupID;
           
-          if (primaryGroupID = _.find(user.attributes, function(attr) { return attr.type === 'primaryGroupID'; })) {
-            var userSID = _.find(user.attributes, function(attr) { return attr.type === 'objectSid'; });
+          if (primaryGroupID = user.attributes['primaryGroupID']) {
+            var userSID = user.attributes['objectSid'];
             userSID = binarySIDToString(userSID._vals[0]);
             var groupSID = userSID.substring(0, userSID.lastIndexOf('-') + 1) + primaryGroupID.vals[0];
             
@@ -427,6 +437,61 @@ function getObjectBySID(sid, client, configuration, callback) {
   });
 }
 
+function hasGroups(groups) {
+  if (!groups || !groups.length || !this.groups || !this.groups.length) {
+    return false;
+  }
+  var grpObj = {};
+  var grpTypes = [];
+  for (var i = 0; i < groups.length; i++) {
+    grpObj[groups[i]] = 1;
+    grpTypes.push(typeof groups[i]);
+  }
+  var tmp, matched = 0;
+  for (i = 0; i < this.groups.length; i++) {
+    if (grpTypes[i] === 'string') {
+      if (grpObj[tmp = this.groups[i].dn] || grpObj[tmp = this.groups[i].getAttribute('objectSid')]) {
+        matched++;
+      }
+    } else {
+      if (grpObj[this.groups]) {
+        matched++;
+      }
+    }
+    if (matched === groups.length) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function getGroup(group) {
+  return _.find(this.groups, function(grp) {
+    if (grp === group || grp.dn === group || grp.getAttribute('objectSid') === group) {
+      return grp;
+    }
+  });
+}
+
+function getAttribute(attr, raw) {
+  var attrID = attr.toUpperCase();
+  return (this.attributes[attrID] && this.attributes[attrID].getValue(raw)) || null;
+  //_.find(this.attributes, function(attribute) { return attribute.type && attribute.type.toUpperCase() === attr.toUpperCase(); });
+}
+
+function getValue(raw) {
+  var hasRawVals = this._vals && this._vals.length && (typeof this._vals[0] !== 'undefined') && this._vals[0] !== null;
+  if (!raw && this.type && this.type.toUpperCase() === 'OBJECTSID') {
+    if (hasRawVals) {
+      return binarySIDToString(this._vals[0]);
+    }
+  }
+  if (!raw && this.vals && this.vals.length && (typeof this.vals[0] !== 'undefined') && this.vals[0] !== null) {
+    return this.vals[0];
+  } else if (raw && hasRawVals) {
+    return this._vals[0];
+  }
+}
 
 function getLDAPClient(configuration, authOptions) {
   validateConfig(configuration);

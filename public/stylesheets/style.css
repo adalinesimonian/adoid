@@ -6,10 +6,43 @@ body {
   font: normal normal 400 16px "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
 }
 
-div, header, main, section, input, button, pre, span, h1, h2, h3, h4, h5, h6, ul, li, article {
+a {
+  color: #3D6698;
+  text-decoration: none;
+}
+
+body, p, div, header, main, section, input, button, pre, span, a, nav, h1, h2, h3, h4, h5, h6, ul, li, article, iron-selector {
+  word-wrap: break-word;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+}
+
+nav {
+  min-height: 56px;
+  height: 56px;
+  padding: 0 24px;
+}
+
+nav, nav > a, nav > div, nav > span {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+nav > a, nav > div, nav > span {
+  outline: none;
+  padding: 8px;
+  height: 100%;
+}
+
+nav > a {
+  font-weight: 500;
+}
+
+nav > .spacer {
+  flex: 1 1 auto;
 }
 
 pre {
@@ -27,8 +60,9 @@ pre {
   cursor: default;
 }
 
-body > header, button, button.affirmative, input[type="button"].affirmative,
-input[type="submit"].affirmative, input[type="button"]:focus,
+body > header, button, button.affirmative, .button.affirmative, 
+input[type="button"].affirmative, input[type="submit"].affirmative,
+.button:focus, .button:hover, input[type="button"]:focus,
 input[type="button"]:hover, input[type="submit"]:focus,
 input[type="submit"]:hover {
   /**
@@ -41,7 +75,8 @@ input[type="submit"]:hover {
               0 3px 1px -2px rgba(0, 0, 0, 0.2);
 }
 
-button, input[type="button"], input[type="submit"] {
+button, .button, input[type="button"], input[type="submit"] {
+  display: inline-block;
   min-width: 96px;
   margin: 4px;
   border-radius: 2px;
@@ -52,15 +87,16 @@ button, input[type="button"], input[type="submit"] {
   cursor: pointer;
   outline: none;
   border: none;
+  text-align: center;
 }
 
-button:focus, input[type="button"]:focus, input[type="submit"]:focus {
+button:focus, .button:focus, input[type="button"]:focus, input[type="submit"]:focus {
 }
 
-button:hover, button:active, input[type="button"]:hover, input[type="button"]:active, input[type="submit"]:hover, input[type="submit"]:active {
+button:hover, button:active, .button:hover, .button:active, input[type="button"]:hover, input[type="button"]:active, input[type="submit"]:hover, input[type="submit"]:active {
 }
 
-button:active, input[type="button"]:active, input[type="submit"]:active {
+button:active, .button:active, input[type="button"]:active, input[type="submit"]:active {
   /**
    * Shadow CSS taken from
    * https://github.com/PolymerElements/paper-styles/blob/master/shadow.html
@@ -72,21 +108,34 @@ button:active, input[type="button"]:active, input[type="submit"]:active {
   transform: translateY(2px);
 }
 
-button.dismissive, input[type="button"].dismissive, input[type="submit"].dismissive {
+button.dismissive, .button.dismissive, input[type="button"].dismissive, input[type="submit"].dismissive {
   color: #616161;
 }
 
-button.affirmative, input[type="button"].affirmative, input[type="submit"].affirmative {
+nav, nav a, button.affirmative, .button.affirmative, input[type="button"].affirmative, input[type="submit"].affirmative {
   background: #0E724F;
   color: #FFF;
 }
 
-button.affirmative:focus, input[type="button"].affirmative:focus, input[type="submit"].affirmative:focus {
+nav a:focus, button.affirmative:focus, .button.affirmative:focus, input[type="button"].affirmative:focus, input[type="submit"].affirmative:focus {
   background: #1E8E66;
 }
 
-button.affirmative:hover, button.affirmative:active, input[type="button"].affirmative:hover, input[type="button"].affirmative:active, input[type="submit"].affirmative:hover, input[type="submit"].affirmative:active {
+nav a:hover, nav a:active, button.affirmative:hover, button.affirmative:active, .button.affirmative:hover, .button.affirmative:active, input[type="button"].affirmative:hover, input[type="button"].affirmative:active, input[type="submit"].affirmative:hover, input[type="submit"].affirmative:active {
   background: #55B291;
+}
+
+button.destructive, .button.destructive, input[type="button"].destructive, input[type="submit"].destructive {
+  background: #DB4437;
+  color: #FFF;
+}
+
+button.destructive:focus, .button.destructive:focus, input[type="button"].destructive:focus, input[type="submit"].destructive:focus {
+  background: #E0645A;
+}
+
+button.destructive:hover, button.destructive:active, .button.destructive:hover, .button.destructive:active, input[type="button"].destructive:hover, input[type="button"].destructive:active, input[type="submit"].destructive:hover, input[type="submit"].destructive:active {
+  background: #E67C73;
 }
 
 input:not([type]), input[type="text"], input[type="password"], input[type="email"] {
@@ -102,12 +151,21 @@ input:not([type]), input[type="text"], input[type="password"], input[type="email
   outline: none;
 }
 
-input:not([type]).error, input[type="text"].error, input[type="password"].error, input[type="email"].error {
+input:not([type]).error, input[type="text"].error, input[type="password"].error, input[type="email"].error,
+input:not([type])[invalid], input[type="text"][invalid], input[type="password"][invalid], input[type="email"][invalid] {
   border-bottom: 2px solid #D32F2F;
 }
 
 input:not([type]):focus, input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus {
   border-bottom: 2px solid #3D6698;
+}
+
+.label {
+  font-size: 14px;
+}
+
+div.error, span.error, label.error {
+  color: #D32F2F;
 }
 
 body > header {
@@ -141,7 +199,6 @@ main {
   min-height: 100%;
   height: auto;
   width: 60%;
-  padding: 24px;
   display: -webkit-flex;
   display: flex;
   -webkit-flex-direction: column;
@@ -153,8 +210,12 @@ main {
             0 3px 3px -2px rgba(0, 0, 0, 0.4);
 }
 
+main > section {
+  padding: 24px;
+}
+
 body:not([unresolved]) main {
-  transition: width ease-in-out .5s;
+  transition: width ease-in-out .38s;
 }
 
 main > section {
@@ -198,6 +259,11 @@ h2 {
   font-size: 24px;
 }
 
+.small-header {
+  font-size: 14px;
+  color: #757575;
+}
+
 header > h1 {
   position: relative;
   top: 0;
@@ -214,7 +280,7 @@ header > h1 {
 }
 
 body:not([unresolved]) header > h1 {
-  transition: transform ease-in-out .5s;
+  transition: transform ease-in-out .38s;
 }
 
 @media(max-width: 1000px) {
@@ -330,17 +396,18 @@ main > section {
   }
 }
 
+ul.permissions, ul.permissions ul {
+  padding: 0;
+  margin: 0;
+}
+
 ul.permissions {
+  padding-bottom: 16px;
   list-style: none outside none;
 }
 
 ul.permissions ul {
   list-style: disc inside none;
-}
-
-ul.permissions, ul.permissions ul {
-  padding: 0;
-  margin: 0;
 }
 
 ul.permissions li {
@@ -375,8 +442,12 @@ ul.permissions li::before {
   width: 32px;
 }
 
-ul.permissions .identity::before {
+ul.permissions .openid::before {
   content: url('data:image/svg+xml,%3Csvg%20fill%3D%22#616161%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M12%205.9c1.16%200%202.1.94%202.1%202.1s-.94%202.1-2.1%202.1S9.9%209.16%209.9%208s.94-2.1%202.1-2.1m0%209c2.97%200%206.1%201.46%206.1%202.1v1.1H5.9V17c0-.64%203.13-2.1%206.1-2.1M12%204C9.79%204%208%205.79%208%208s1.79%204%204%204%204-1.79%204-4-1.79-4-4-4zm0%209c-2.67%200-8%201.34-8%204v3h16v-3c0-2.66-5.33-4-8-4z%22%2F%3E%3Cpath%20d%3D%22M0%200h24v24H0z%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E');
+}
+
+ul.permissions .profile::before {
+  content: url('data:image/svg+xml,%3Csvg%20fill%3D%22#616161%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M19%2019H5V5h14m0-2H5a2%202%200%200%200-2%202v14a2%202%200%200%200%202%202h14a2%202%200%200%200%202-2V5c0-1.11-.9-2-2-2m-2.5%2013.25c0-1.5-3-2.25-4.5-2.25s-4.5.75-4.5%202.25V17h9M12%2012.25A2.25%202.25%200%200%200%2014.25%2010%202.25%202.25%200%200%200%2012%207.75%202.25%202.25%200%200%200%209.75%2010%202.25%202.25%200%200%200%2012%2012.25z%22%2F%3E%3Cpath%20d%3D%22M0%200h24v24H0z%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E');
 }
 
 ul.permissions .email::before {
@@ -387,6 +458,100 @@ ul.permissions .apps::before {
   content: url('data:image/svg+xml,%3Csvg%20fill%3D%22%23616161%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M4%208h4V4H4v4zm6%2012h4v-4h-4v4zm-6%200h4v-4H4v4zm0-6h4v-4H4v4zm6%200h4v-4h-4v4zm6-10v4h4V4h-4zm-6%204h4V4h-4v4zm6%206h4v-4h-4v4zm0%206h4v-4h-4v4z%22%2F%3E%3Cpath%20d%3D%22M0%200h24v24H0z%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E');
 }
 
-a {
-  color: #00B7FF;
+.table, .table .row-content, .table .row-content .cell {
+  display: -webkit-flex;
+  display: flex;
+}
+
+.table {
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  padding: 12px 0 24px 0;
+}
+
+.table .row-content, .table .row-content .cell, .table .row-content .cell.action a {
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+.table .row {
+  border-bottom: 1px solid #ddd;
+}
+
+.table .row:first-of-type {
+  border-top: 1px solid #ddd;
+}
+
+.table:first-child, nav + .table {
+  padding-top: 0;
+}
+
+.table:first-child .row:first-of-type, nav + .table .row:first-of-type {
+  border-top: none;
+}
+
+.table .row-content {
+  height: 56px;
+}
+
+.table .row-content .cell.flex {
+  -webkit-flex: 1 auto;
+  flex: 1 auto;
+}
+
+.table .row-content .cell {
+  padding: 0 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-flex;
+  display: flex;
+}
+
+.table .row-content .cell.stack {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: flex-start;
+  align-items: flex-start;
+}
+
+.table .row-content .cell.stack > span {
+  font-size: 14px;
+  color: #757575;
+}
+
+.table .row-content .cell.action {
+  padding: 0;
+  height: 100%;
+}
+
+.table .row-content .cell.action a {
+  display: -webkit-flex;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  font-weight: 500;
+  padding: 12px;
+}
+
+.table .row-content .cell img {
+  width: 48px;
+  height: 48px;
+}
+
+.table .row-content .cell:first-of-type {
+  padding-left: 12px;
+}
+
+.table .row-content .cell:last-of-type {
+  padding-right: 12px;
+}
+
+.collapsible-item .item-content {
+  padding: 16px;
+}
+
+.collapsible-item.item-expanded .item-header {
+  background: #eee;
 }

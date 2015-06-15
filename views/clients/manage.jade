@@ -1,0 +1,94 @@
+extends ../layout
+
+block head
+  if !(!register && !client)
+    include ../includes/polymer
+    link(rel='import', href='/components/iron-input/iron-input.html')
+    link(rel='import', href='/components/plastik-regex-validator/plastik-regex-validator.html')
+    link(rel='import', href='/components/plastik-url-validator/plastik-url-validator.html')
+block content
+  - postInput = postInput || {};
+  - badInput = badInput || [];
+  nav
+    a(href='/clients') Return
+    div.spacer
+    if user.name
+      div.identity= user.name.split(' ')[0]
+    a(href='/signout') Sign out
+  if register || client
+    section
+      .auth-controls
+        .signin
+          svg(class='auth-icon', fill='#B0BEC5', height='200', width='200', viewbox='0 0 24 24', xmlns='http://www.w3.org/2000/svg')
+            path(d='M4 4h16v16H4V4m2 4v10h12V8H6z')
+            path(d='M0 0h24v24H0z', fill='none')
+          section.auth-details
+            section.request-details
+              h2= register ? 'Enter client details below.' : 'Edit client details below.'
+            template(is='dom-bind')
+              form.signin-form(method='post', on-submit='validateAll', novalidate)
+                plastik-regex-validator(regex='/^[^\\s].{2,98}[^\\s]$/', validator-name='name-validator')
+                plastik-url-validator
+                .signin-control
+                  input(is='iron-input', required, name='name', type='text', placeholder='Name', validator='name-validator', bind-value='{{clientName}}', invalid='{{nameInvalid}}', on-input='validate', maxlength=100)
+                  .label #[span(class='error', hidden$='[[!nameInvalid]]') Invalid client name.] &nbsp;
+                  .label
+                    | Client name:
+                    ul
+                      li must be 4 - 100 characters long
+                      li cannot begin or end with a space
+                .signin-control
+                  input(is='iron-input', name='redirect_uri', required, validator='plastik-url-validator', bind-value='{{redirectURI}}', type='text', on-input='validate', invalid='{{redirectURIInvalid}}', placeholder='Redirect URI')
+                  .label #[span(class='error', hidden$='[[!redirectURIInvalid]]') Invalid URI.] &nbsp;
+                .signin-submit
+                  a.button.dismissive(href='/clients') Cancel
+                  if !register
+                    button.destructive(on-click='confirmDeletion') Delete
+                  input.affirmative(type='submit', value='Save')
+            script.
+              var template = document.querySelector('template[is="dom-bind"]');
+              template.override = false;
+              template.confirmDeletion = function(e) {
+                if (e) {
+                  e.preventDefault();
+                }
+                if (confirm('Are you sure you\'d like to delete this client? There\'s no going back.')) {
+                  var hiddenDelete = document.createElement('input');
+                  hiddenDelete.setAttribute('type', 'hidden');
+                  hiddenDelete.setAttribute('name', 'delete');
+                  hiddenDelete.setAttribute('value', 'delete');
+                  var form = document.querySelector('form');
+                  form.appendChild(hiddenDelete);
+                  this.override = true;
+                  form.submit();
+                }
+                return false;
+              };
+              template.validate = function(e) {
+                e.target && e.target.validate();
+              };
+              template.validateAll = function(e) {
+                if (this.override) {
+                  return true;
+                }
+                var form = document.querySelector('form');
+                if (!form) { return false; }
+                var inputs = form.querySelectorAll('input[is="iron-input"]');
+                var valid = true;
+                for (var i = 0; i < inputs.length; i++) {
+                  valid = inputs[i].validate() ? (valid ? true : false) : false;
+                }
+                if (!valid && e) {
+                  e.preventDefault();
+                }
+                return valid;
+              };
+              var client = !{JSON.stringify(client || {})};
+              var postInput = !{JSON.stringify(postInput || {})};
+              template.nameInvalid = #{!!~badInput.indexOf('name')};
+              template.redirectURIInvalid = #{!!~badInput.indexOf('redirect_uri')};
+              template.clientName = postInput['name'] || client['name'] || '';
+              template.redirectURI = postInput['redirect_uri'] || (client['redirect_uris'] && client['redirect_uris'][0]) || '';
+  else
+    section
+      | Couldn't find a client with the given ID.

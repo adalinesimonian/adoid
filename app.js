@@ -2,6 +2,7 @@ require("console-stamp")(console, "HH:MM:ss.l");
 var config = require('config');
 
 var express = require('express');
+var forceSSL = require('express-force-ssl');
 var expressSession = require('express-session');
 var rs = require('connect-redis')(expressSession);
 var path = require('path');
@@ -12,7 +13,7 @@ var bodyParser = require('body-parser');
 
 var app = express();
 
-var authui = require('./routes/authui');
+var auth = require('./routes/auth');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -23,6 +24,7 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(forceSSL);
 app.use(cookieParser(config.get('secret')));
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -33,7 +35,7 @@ app.use(expressSession({
   resave: true
 }));
 
-app.use('/', authui);
+app.use('/', auth);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
