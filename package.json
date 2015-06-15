@@ -1,6 +1,7 @@
 {
   "name": "adoid",
   "license": "MIT",
+  "description": "Active Directory OpenID Connect provider that runs on express.",
   "repository": {
     "type" : "git",
     "url" : "https://github.com/vsimonian/adoid.git"
