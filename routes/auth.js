@@ -6,8 +6,8 @@ var config = require('config');
 var validator = require('validator');
 
 var adConfig = config.get('activeDirectory');
-var ADClient = require('../ad-client.js');
-var ad = new ADClient(adConfig);
+var ADAuth = require('adauth');
+var ad = new ADAuth(adConfig);
 
 var options = {
   login_url: '/signin',
@@ -26,38 +26,38 @@ var oidc = require('openid-connect').oidc(options);
 var router = express.Router();
 
 var ADRole = function(adGroup) {
-  this.sid = adGroup.getAttribute('objectSid');
+  this.sid = adGroup.objectSid;
   this.dn = adGroup.dn;
 };
 
 ADRole.prototype = Object.create(null);
 
 ADRole.prototype.valueOf = ADRole.prototype.toString = function() {
-  return this.sid;
+  return this.objectSid;
 };
 
 var adUserToOIDUser = function (adUser) {
   return {
-    id: adUser.getAttribute('objectSid'),
-    name: adUser.getAttribute('name'),
-    given_name: adUser.getAttribute('givenName'),
-    middle_name: adUser.getAttribute('middleName'),
-    family_name: adUser.getAttribute('sn'),
+    id: adUser.objectSid,
+    name: adUser.name,
+    given_name: adUser.givenName,
+    middle_name: adUser.middleName,
+    family_name: adUser.sn,
     //profile: null,
-    email: adUser.getAttribute('mail') ||
-           adUser.getAttribute('userPrincipalName'),
+    email: adUser.mail ||
+           adUser.userPrincipalName,
     //password: null,
     //picture: null,
     //birthdate: null,
     //gender: null,
-    phone_number: adUser.getAttribute('telephoneNumber') ||
-                  adUser.getAttribute('mobile') ||
-                  adUser.getAttribute('homePhone') ||
-                  adUser.getAttribute('otherHomePhone') ||
-                  adUser.getAttribute('otherTelephone') ||
-                  adUser.getAttribute('ipPhone') ||
-                  adUser.getAttribute('otherIpPhone'),
-    roles: adUser.groups.map(function (group) { return new ADRole(group); })
+    phone_number: adUser.telephoneNumber ||
+                  adUser.mobile ||
+                  adUser.homePhone ||
+                  adUser.otherHomePhone ||
+                  adUser.otherTelephone ||
+                  adUser.ipPhone ||
+                  adUser.otherIpPhone,
+    roles: adUser._groups.map(function (group) { return new ADRole(group); })
   };
 };
 
@@ -166,7 +166,9 @@ function(req, res, next) {
         } else {
           req.model.user.destroy({id: req.session.userModel.id}, function(err) {
             req.model.user.create(req.session.userModel, function(err, user) {
-              console.error(err);
+              if (err) {
+                return next(err, null);
+              }
               return next(null, req.session.userModel);
             });
           });

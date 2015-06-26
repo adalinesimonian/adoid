@@ -1,12 +1,12 @@
 {
   "activeDirectory": {
-    // The domain controller's hostname/IP address
-    "host": "dc.example.com",
+    // The domain controller's LDAP url
+    "url": "ldaps://dc.example.com",
     // The domain's root distinguished name
-    "baseDN": "dc=example,dc=com",
+    "domainDn": "dc=example,dc=com",
     // Credentials for a user with permissions to enumerate other users' attributes
-    "username": "adoid",
-    "password": "terriblepassword123"
+    "bindDn": "adoid",
+    "bindCredentials": "terriblepassword123"
   },
   // Redis database connection settings
   "redis": {

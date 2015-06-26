@@ -6,7 +6,7 @@
     "type" : "git",
     "url" : "https://github.com/vsimonian/adoid.git"
   },
-  "version": "0.0.2",
+  "version": "0.0.3",
   "scripts": {
     "postinstall": "bower install",
     "start": "node ./bin/www"
@@ -25,12 +25,11 @@
     "config": "^1.14.0",
     "express-session": "^1.11.2",
     "connect-redis": "^2.3.0",
-    "ldapjs": "^0.7.1",
+    "adauth": "^0.1.3",
     "long": "^2.2.3",
     "events": "^1.0.2",
     "util": "^0.10.3",
     "underscore": "^1.8.3",
-    "wait.for": "^0.6.6",
     "openid-connect": "vsimonian/OpenIDConnect",
     "console-stamp": "^0.1.6",
     "validator": "^3.40.1"
