@@ -6,10 +6,13 @@
     "type" : "git",
     "url" : "https://github.com/vsimonian/adoid.git"
   },
-  "version": "0.0.3",
+  "version": "0.0.4",
   "scripts": {
     "postinstall": "bower install",
     "start": "node ./bin/www"
+  },
+  "bin": {
+    "adoid": "./bin/www"
   },
   "dependencies": {
     "bower": "^1.4.1",
