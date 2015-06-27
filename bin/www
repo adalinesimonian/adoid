@@ -89,6 +89,9 @@ function onError(error) {
       console.error(bind + ' is already in use');
       process.exit(1);
       break;
+    case 'ECONNRESET':
+      console.log(bind + ' - connection with client reset.');
+      break;
     default:
       throw error;
   }
