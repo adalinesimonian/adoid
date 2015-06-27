@@ -46,7 +46,7 @@ httpsServer.listen(httpsPort);
 httpsServer.on('error', onError);
 httpsServer.on('listening', onListening);
 
-process.on('unhandledException', onError);
+process.on('uncaughtException', onError);
 
 /**
  * Normalize a port into a number, string, or false.
