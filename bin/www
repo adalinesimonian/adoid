@@ -46,6 +46,8 @@ httpsServer.listen(httpsPort);
 httpsServer.on('error', onError);
 httpsServer.on('listening', onListening);
 
+process.on('unhandledException', onError);
+
 /**
  * Normalize a port into a number, string, or false.
  */
@@ -71,7 +73,7 @@ function normalizePort(val) {
  */
 
 function onError(error) {
-  if (error.syscall !== 'listen') {
+  if (error.syscall !== 'listen' && error.syscall !== 'read') {
     throw error;
   }
 
