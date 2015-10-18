@@ -1,5 +1,7 @@
 ## ADOID
 
+**Development on ADOID has ceased for the foreseeable future. See [Anvil Connect](https://github.com/anvilresearch/connect) for a maintained alternative.**
+
 ADOID is an Active Directory OpenID Connect provider that runs on [express](http://expressjs.com/).
 
 ### Using ADOID with passport-openidconnect
